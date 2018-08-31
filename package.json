@@ -1,0 +1,68 @@
+{
+	"name": "maxlint",
+	"displayName": "MaxLint",
+	"description": "Maximum automatic linting by running lebab, Prettier, and ESLint",
+	"version": "1.1.0",
+	"publisher": "yaksoy",
+	"engines": {
+		"vscode": "^1.25.0"
+	},
+	"categories": [
+		"Linters"
+	],
+	"keywords": [
+		"autofix",
+		"linting",
+		"lebab",
+		"prettier",
+		"eslint"
+	],
+	"activationEvents": [
+		"onCommand:extension.lintFile"
+	],
+	"main": "./extension",
+	"contributes": {
+		"configuration": [
+			{
+				"title": "MaxLint",
+				"properties": {
+					"maxlint.lebab": {
+						"type": "string",
+						"default": "-t arrow,multi-var",
+						"description": "Lebab parameters",
+						"scope": "window"
+					},
+					"maxlint.prettier": {
+						"type": "string",
+						"default": "--arrow-parens avoid --print-width 120",
+						"description": "Prettier parameters",
+						"scope": "window"
+					},
+					"maxlint.eslint": {
+						"type": "string",
+						"default": "",
+						"description": "ESLint parameters",
+						"scope": "window"
+					}
+				}
+			}
+		],
+		"commands": [
+			{
+				"command": "extension.lintFile",
+				"title": "Lint file"
+			}
+		]
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.21",
+		"eslint": "^4.11.0",
+		"@types/node": "^8.10.25",
+		"@types/mocha": "^2.2.42"
+	}
+}
