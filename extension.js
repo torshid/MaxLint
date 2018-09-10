@@ -64,7 +64,7 @@ function activate(context) {
 		// run commands
 			execCmd('lebab --replace ' + fileName + ' ' + getConfig('maxlint.lebab'), 'Linting (lebab)...', function () {
 				execCmd('prettier ' + getConfig('maxlint.prettier') + ' --write \"' + fileName + '"', 'Linting (prettier)...', function () {
-					execCmd('eslint --quiet --max-warnings 0 --fix ' + getConfig('maxlint.eslint') + ' \"' + fileName + '\"', 'Linting (eslint)...', function () {
+					execCmd('eslint --quiet --fix ' + getConfig('maxlint.eslint') + ' \"' + fileName + '\"', 'Linting (eslint)...', function () {
 						vscode.window.showInformationMessage('Linting completed!');
 						sbItem.hide();
 					});
