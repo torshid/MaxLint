@@ -40,7 +40,7 @@ function activate(context) {
 		const errorMsg = text => {
 			vscode.window.showErrorMessage('Linting error: ' + text);
 			sbItem.hide();
-		}
+		};
 
 		const execCmd = (cmd, text, callback, condition) => {
 			if (condition != null && !condition) {
@@ -64,7 +64,7 @@ function activate(context) {
 
 		const getConfig = function getConfig(name) {
 			return vscode.workspace.getConfiguration().get(name);
-		}
+		};
 
 		// run commands
 		execCmd('lebab --replace ' + fileName + ' ' + getConfig('maxlint.lebab'), 'Linting (lebab)...', () => {
@@ -72,9 +72,9 @@ function activate(context) {
 				execCmd('eslint --quiet --fix ' + getConfig('maxlint.eslint') + ' \"' + fileName + '\"', 'Linting (eslint)...', () => {
 					vscode.window.showInformationMessage('Linting completed!');
 					sbItem.hide();
-				}, getConfig('maxlint.eslint.enabled'));
-			}, getConfig('maxlint.prettier.enabled'))
-		}, getConfig('maxlint.lebab.enabled'));
+				}, getConfig('maxlint.eslint_'));
+			}, getConfig('maxlint.prettier_'));
+		}, getConfig('maxlint.lebab_'));
 	});
 
 	let disableLintCommand = vscode.commands.registerCommand('extension.disableLint', () => {
@@ -89,7 +89,7 @@ function activate(context) {
 				&& diagnostics[idx].range.start.line >= selection.start.line
 			&& diagnostics[idx].range.end.line <= selection.start.line)
 			{
-				errors.push(diagnostics[idx].code)
+				errors.push(diagnostics[idx].code);
 			}
 		}
 		errors = errors.length > 0 ? ' ' + errors.join(', ') : '';
@@ -105,7 +105,7 @@ function activate(context) {
 		}
 		// multiline comment
 		else {
-			const comment = spaces + '/* eslint-disable-next-line' + errors + ' */';
+			const comment = spaces + '/* eslint-disable' + errors + ' */';
 			editor.edit(builder => builder.replace(selection, comment + '\n' + text + '\n' + comment));
 		}
 	});

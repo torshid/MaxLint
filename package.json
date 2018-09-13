@@ -2,7 +2,7 @@
 	"name": "maxlint",
 	"displayName": "MaxLint",
 	"description": "Maximum automatic linting by running lebab, Prettier, and ESLint",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"publisher": "yaksoy",
 	"engines": {
 		"vscode": "^1.25.0"
@@ -34,7 +34,7 @@
 						"description": "Lebab parameters",
 						"scope": "window"
 					},
-					"maxlint.lebab.enabled": {
+					"maxlint.lebab_": {
 						"type": "boolean",
 						"default": true,
 						"description": "Enable lebab",
@@ -46,7 +46,7 @@
 						"description": "Prettier parameters",
 						"scope": "window"
 					},
-					"maxlint.prettier.enabled": {
+					"maxlint.prettier_": {
 						"type": "boolean",
 						"default": true,
 						"description": "Enable Prettier",
@@ -58,7 +58,7 @@
 						"description": "ESLint parameters",
 						"scope": "window"
 					},
-					"maxlint.eslint.enabled": {
+					"maxlint.eslint_": {
 						"type": "boolean",
 						"default": true,
 						"description": "Enable ESLint",
