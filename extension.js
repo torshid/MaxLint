@@ -5,7 +5,8 @@ const { exec } = require('child_process');
 
 function activate(context) {
 	let sbItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
-	let disposable = vscode.commands.registerCommand('extension.lintFile', function () {
+	
+	let lintFileCommand = vscode.commands.registerCommand('extension.lintFile', () => {
 		
 		let editor = vscode.window.activeTextEditor;
 		// if no file opened or is not .js, stop
@@ -36,12 +37,16 @@ function activate(context) {
 
 		vscode.window.showInformationMessage('Linting file...');
 
-		const errorMsg = function(text) {
-			vscode.window.showInformationMessage('Linting error: ' + text);
+		const errorMsg = text => {
+			vscode.window.showErrorMessage('Linting error: ' + text);
 			sbItem.hide();
 		}
 
-		const execCmd = function (cmd, text, callback) {
+		const execCmd = (cmd, text, callback, condition) => {
+			if (condition != null && !condition) {
+				callback();
+				return;
+			}
 			if (text != null) {
 				sbItem.text = text;
 			}
@@ -62,19 +67,52 @@ function activate(context) {
 		}
 
 		// run commands
-			execCmd('lebab --replace ' + fileName + ' ' + getConfig('maxlint.lebab'), 'Linting (lebab)...', function () {
-				execCmd('prettier ' + getConfig('maxlint.prettier') + ' --write \"' + fileName + '"', 'Linting (prettier)...', function () {
-					execCmd('eslint --quiet --fix ' + getConfig('maxlint.eslint') + ' \"' + fileName + '\"', 'Linting (eslint)...', function () {
-						vscode.window.showInformationMessage('Linting completed!');
-						sbItem.hide();
-					});
-				})
-			});
-		});
-	//});
+		execCmd('lebab --replace ' + fileName + ' ' + getConfig('maxlint.lebab'), 'Linting (lebab)...', () => {
+			execCmd('prettier ' + getConfig('maxlint.prettier') + ' --write \"' + fileName + '"', 'Linting (prettier)...', () => {
+				execCmd('eslint --quiet --fix ' + getConfig('maxlint.eslint') + ' \"' + fileName + '\"', 'Linting (eslint)...', () => {
+					vscode.window.showInformationMessage('Linting completed!');
+					sbItem.hide();
+				}, getConfig('maxlint.eslint.enabled'));
+			}, getConfig('maxlint.prettier.enabled'))
+		}, getConfig('maxlint.lebab.enabled'));
+	});
+
+	let disableLintCommand = vscode.commands.registerCommand('extension.disableLint', () => {
+		const editor = vscode.window.activeTextEditor;
+		const diagnostics = vscode.languages.getDiagnostics(editor.document.uri);
+		const selection = editor.selection;
+
+		// filter eslint errors
+		let errors = [];
+		for (var idx in diagnostics) {
+			if (diagnostics[idx].source === "eslint"
+				&& diagnostics[idx].range.start.line >= selection.start.line
+			&& diagnostics[idx].range.end.line <= selection.start.line)
+			{
+				errors.push(diagnostics[idx].code)
+			}
+		}
+		errors = errors.length > 0 ? ' ' + errors.join(', ') : '';
+
+		const text = editor.document.getText(selection);
+
+		let spaces = text.match(/^([\s]+)/g);
+		spaces = spaces == null ? '' : spaces[0];
+
+		// single line comment
+		if (selection.isSingleLine || (selection.end.line - selection.start.line === 1 && selection.end.character === 0)) {
+			editor.edit(builder => builder.replace(selection, spaces + '// eslint-disable-next-line' + errors + '\n' + text))
+		}
+		// multiline comment
+		else {
+			const comment = spaces + '/* eslint-disable-next-line' + errors + ' */';
+			editor.edit(builder => builder.replace(selection, comment + '\n' + text + '\n' + comment));
+		}
+	});
 
 	context.subscriptions.push(sbItem);
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(lintFileCommand);
+	context.subscriptions.push(disableLintCommand);
 }
 
 exports.activate = activate;

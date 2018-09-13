@@ -17,8 +17,10 @@
 		"prettier",
 		"eslint"
 	],
+	"repository": "https://github.com/torshid/MaxLint",
 	"activationEvents": [
-		"onCommand:extension.lintFile"
+		"onCommand:extension.lintFile",
+		"onCommand:extension.disableLint"
 	],
 	"main": "./extension",
 	"contributes": {
@@ -32,10 +34,22 @@
 						"description": "Lebab parameters",
 						"scope": "window"
 					},
+					"maxlint.lebab.enabled": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable lebab",
+						"scope": "window"
+					},
 					"maxlint.prettier": {
 						"type": "string",
 						"default": "--arrow-parens avoid --print-width 120",
 						"description": "Prettier parameters",
+						"scope": "window"
+					},
+					"maxlint.prettier.enabled": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable Prettier",
 						"scope": "window"
 					},
 					"maxlint.eslint": {
@@ -43,16 +57,39 @@
 						"default": "",
 						"description": "ESLint parameters",
 						"scope": "window"
+					},
+					"maxlint.eslint.enabled": {
+						"type": "boolean",
+						"default": true,
+						"description": "Enable ESLint",
+						"scope": "window"
 					}
 				}
 			}
+		],
+		"keybindings": [
+		  {
+			"command": "extension.disableLint",
+			"key": "ctrl+shift+d ctrl+shift+l"
+		  }
 		],
 		"commands": [
 			{
 				"command": "extension.lintFile",
 				"title": "Lint file"
+			},
+			{
+				"command": "extension.disableLint",
+				"title": "Disable linting for selection"
 			}
-		]
+		],
+		"menus": {
+			"editor/context": [{
+				"command": "extension.disableLint",
+				"when": "editorHasSelection && resourceLangId == javascript",
+				"group": "Group@1"
+			}]
+		}
 	},
 	"scripts": {
 		"postinstall": "node ./node_modules/vscode/bin/install",

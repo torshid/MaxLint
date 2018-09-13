@@ -18,6 +18,12 @@ Open a `.js` file, press `CTRL+SHIFT+P` to show all commands, and run **`Lint fi
 
 You will then be notified that the process has started. You will also be notified when the process ends or in case an error occurs.
 
+Extra feature
+-------------
+You can disable ESLint rules for specific lines if you want so. Select the lines for which you want the rules disabled, right click on the document and run `Disable linting for selection`.
+
+This will insert the `eslint-disable` comment lines according to the selection. If ESLint errors are present in that selection, the corresponding rules will also be written in the comments.
+
 package.json
 ------------
 **MaxLint** will try to localize the `package.json` of your project, so that the command is executed from the folder it is in. This can be helpful in case you have configuration files for Prettier or ESLint in that same directory.
@@ -31,6 +37,8 @@ The default values are:
 - lebab: `-t arrow,multi-var`
 - Prettier: `--arrow-parens avoid --print-width 120`
 - ESLint: empty
+
+You can also disable completely a step if you do not want to make use of it.
 
 Screenshots
 -----------
