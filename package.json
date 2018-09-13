@@ -2,7 +2,7 @@
 	"name": "maxlint",
 	"displayName": "MaxLint",
 	"description": "Maximum automatic linting by running lebab, Prettier, and ESLint",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"publisher": "yaksoy",
 	"engines": {
 		"vscode": "^1.25.0"
@@ -68,10 +68,10 @@
 			}
 		],
 		"keybindings": [
-		  {
-			"command": "extension.disableLint",
-			"key": "ctrl+shift+d ctrl+shift+l"
-		  }
+			{
+				"command": "extension.disableLint",
+				"key": "ctrl+shift+d ctrl+shift+l"
+			}
 		],
 		"commands": [
 			{
@@ -84,11 +84,13 @@
 			}
 		],
 		"menus": {
-			"editor/context": [{
-				"command": "extension.disableLint",
-				"when": "editorHasSelection && resourceLangId == javascript",
-				"group": "Group@1"
-			}]
+			"editor/context": [
+				{
+					"command": "extension.disableLint",
+					"when": "editorHasSelection && resourceLangId == javascript",
+					"group": "Group@1"
+				}
+			]
 		}
 	},
 	"scripts": {
