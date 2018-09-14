@@ -85,9 +85,10 @@ function activate(context) {
 		// filter eslint errors
 		let errors = [];
 		for (var idx in diagnostics) {
+			console.log(diagnostics[idx].source)
 			if (diagnostics[idx].source === "eslint"
 				&& diagnostics[idx].range.start.line >= selection.start.line
-			&& diagnostics[idx].range.end.line <= selection.start.line)
+			&& diagnostics[idx].range.end.line <= selection.end.line)
 			{
 				errors.push(diagnostics[idx].code);
 			}
@@ -101,7 +102,7 @@ function activate(context) {
 
 		// single line comment
 		if (selection.isSingleLine || (selection.end.line - selection.start.line === 1 && selection.end.character === 0)) {
-			editor.edit(builder => builder.replace(selection, spaces + '// eslint-disable-next-line' + errors + '\n' + text))
+			editor.edit(builder => builder.replace(selection, spaces + '// eslint-disable-next-line' + errors + '\n' + text));
 		}
 		// multiline comment
 		else {
